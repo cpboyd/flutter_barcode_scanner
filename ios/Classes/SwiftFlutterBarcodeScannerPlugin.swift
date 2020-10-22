@@ -192,10 +192,11 @@ class BarcodeScannerViewController: UIViewController {
     /// Create and return flash button
     private lazy var flashIcon : UIButton! = {
         let flashButton = UIButton()
-        flashButton.setTitle("Flash",for:.normal)
+        flashButton.tintColor = .white
+        flashButton.accessibilityLabel = "Toggle flash"
         flashButton.translatesAutoresizingMaskIntoConstraints=false
-        
-        flashButton.setImage(UIImage(named: "ic_flash_off", in: Bundle(for: SwiftFlutterBarcodeScannerPlugin.self), compatibleWith: nil),for:.normal)
+
+        flashIconOff()
         
         flashButton.addTarget(self, action: #selector(BarcodeScannerViewController.flashButtonClicked), for: .touchUpInside)
         return flashButton
@@ -395,13 +396,21 @@ class BarcodeScannerViewController: UIViewController {
             /// Handle further checks
         }
     }
+
+    private func flashIcon(isOn: Bool = false) -> UIImage? {
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(scale: .large)
+            return UIImage(systemName: isOn ? "bolt.fill" : "bolt.slash", withConfiguration: config)
+        }
+        return UIImage(named: isOn ? "ic_flash_on" : "ic_flash_off", in: Bundle(for: SwiftFlutterBarcodeScannerPlugin.self), compatibleWith: nil)
+    }
     
     private func flashIconOff() {
-        flashIcon.setImage(UIImage(named: "ic_flash_off", in: Bundle(for: SwiftFlutterBarcodeScannerPlugin.self), compatibleWith: nil),for:.normal)
+        flashIcon.setImage(flashIcon(), for:.normal)
     }
     
     private func flashIconOn() {
-        flashIcon.setImage(UIImage(named: "ic_flash_on", in: Bundle(for: SwiftFlutterBarcodeScannerPlugin.self), compatibleWith: nil),for:.normal)
+        flashIcon.setImage(flashIcon(isOn: true), for:.normal)
     }
     
     private func setFlashStatus(device: AVCaptureDevice, mode: AVCaptureDevice.TorchMode) {
