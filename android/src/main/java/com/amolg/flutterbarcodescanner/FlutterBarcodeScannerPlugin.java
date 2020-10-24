@@ -194,7 +194,7 @@ public class FlutterBarcodeScannerPlugin implements MethodCallHandler, ActivityR
      */
     public static void onBarcodeScanReceiver(final Barcode barcode) {
         try {
-            if (barcode != null && !barcode.displayValue.isEmpty()) {
+            if (barcode != null && barcodeStream != null && !barcode.displayValue.isEmpty()) {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
